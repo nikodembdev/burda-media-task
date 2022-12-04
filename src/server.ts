@@ -10,6 +10,7 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerDocument } from "./swagger";
 
 function serverFactory(deps: AwilixContainer) {
+  const swaggerEp = "/api-docs";
   const config: Config = deps.resolve("config");
 
   const app = express();
@@ -30,10 +31,11 @@ function serverFactory(deps: AwilixContainer) {
 
   app.use(errors());
 
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use(swaggerEp, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   return app.listen(port, () => {
     console.log(`Run at port ${port}`);
+    console.log(`Api docs: localhost:${port}${swaggerEp}`);
   });
 }
 
