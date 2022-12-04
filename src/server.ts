@@ -6,6 +6,9 @@ import bodyParser from "body-parser";
 import { getOptimalShoppingListValidation } from "./lib/shopping-list/actions/get-optimal-shopping-list.action";
 import { errors } from "celebrate";
 
+import swaggerUi from "swagger-ui-express";
+import { swaggerDocument } from "./swagger";
+
 function serverFactory(deps: AwilixContainer) {
   const config: Config = deps.resolve("config");
 
@@ -26,6 +29,8 @@ function serverFactory(deps: AwilixContainer) {
   );
 
   app.use(errors());
+
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   return app.listen(port, () => {
     console.log(`Run at port ${port}`);
