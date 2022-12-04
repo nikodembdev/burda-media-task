@@ -3,6 +3,9 @@ import { AwilixContainer } from "awilix";
 import { Config } from "./config/config";
 
 import bodyParser from "body-parser";
+import { getOptimalShoppingListValidation } from "./lib/shopping-list/actions/get-optimal-shopping-list.action";
+import { errors } from "celebrate";
+
 function serverFactory(deps: AwilixContainer) {
   const config: Config = deps.resolve("config");
 
@@ -11,6 +14,18 @@ function serverFactory(deps: AwilixContainer) {
   app.use(bodyParser.json());
 
   const port = config.HTTP.port;
+
+  const getOptimalShoppingListAction: express.RequestHandler = deps.resolve(
+    "getOptimalShoppingListAction"
+  );
+
+  app.post(
+    "/get-optimal-shopping-list",
+    [getOptimalShoppingListValidation],
+    getOptimalShoppingListAction
+  );
+
+  app.use(errors());
 
   return app.listen(port, () => {
     console.log(`Run at port ${port}`);
